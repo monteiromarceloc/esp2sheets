@@ -1,5 +1,6 @@
 // get URL param
 // https://script.google.com/macros/s/AKfycbzY86fsw9ciDN0c7BLupnCCTP9rPIoo-sKRXbEZ_R0/dev?value=123
+// video tutorial: https://www.youtube.com/watch?v=4e9hE34RMZM
 
 function doGet(e) {
   Logger.log(JSON.stringify(e));
