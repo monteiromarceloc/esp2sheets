@@ -91,7 +91,7 @@ void serveGrowerData(float temperature, float humidity) {
   http.addHeader("Content-Type", "application/json");  //Specify content-type header
   char payload[128];
   // mounting JSON payload in string format
-  snprintf(payload, sizeof(payload), "{\"temperature\":\"%.2f\", \"humidity\":\"%.2f\", \"timestamp\":%d000}", temperature, humidity, now.Epoch64Time());
+  snprintf(payload, sizeof(payload), "{\"temperature\":%.2f, \"humidity\":%.2f, \"timestamp\":%d000}", temperature, humidity, now.Epoch64Time());
   int httpCode = http.POST(payload);    // httpCode will be negative on error
   if (httpCode > 0) {
     // HTTP header has been send and Server response header has been handled
