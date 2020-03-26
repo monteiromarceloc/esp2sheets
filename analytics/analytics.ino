@@ -1,9 +1,11 @@
 #include "DHT.h"
 #include <ESP8266WiFi.h>
+#include <ESP8266HTTPClient.h>
 
 #ifndef STASSID
 #define STASSID "NOME DO WIFI"
 #define STAPSK  "SENHA"
+#define API_BASE_URL "http://54.233.92.165:8080"
 #endif
 #define DHTPIN 5
 #define DHTTYPE DHT11
@@ -50,6 +52,7 @@ void measureHumidityAndTemperature() {
     currentTemperature = t;
     Serial.print(F("New currentTemperature: "));
     Serial.println(currentTemperature);
+    serveGrowerData(t, h);
   }
 
   Serial.print(F("currentTemperature: "));
@@ -61,8 +64,27 @@ void measureHumidityAndTemperature() {
   Serial.println(F("°C "));  
 }
 
-void serveGrowerData() {
+void serveGrowerData(float temperature, float humidity) {
+  WiFiClient client;
+  HTTPClient http;
+  http.begin(client, API_BASE_URL "/analytics/serveGrowerData");
+  http.addHeader("Content-Type", "application/json");  //Specify content-type header
+  char payload[64];
+  snprintf(payload, sizeof(payload), "{\"temperature\":\"%.2f\", \"humidity\":\"%.2f\"}", temperature, humidity); 
+  int httpCode = http.POST(payload);    // httpCode will be negative on error
+  if (httpCode > 0) {
+    // HTTP header has been send and Server response header has been handled
+    Serial.printf("[HTTP] POST... code: %d\n", httpCode);
 
+    // file found at server
+    if (httpCode == HTTP_CODE_OK) {
+      Serial.println("...Saved!");
+    }
+  } else {
+    Serial.printf("[HTTP] POST... failed, error: %s\n", http.errorToString(httpCode).c_str());
+  }
+
+  http.end();
 }
 
 float difference(float a, float b) {
