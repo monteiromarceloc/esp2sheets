@@ -45,7 +45,8 @@ void setup() {
 }
 
 void loop() {
-  if ((WiFi.status() == WL_CONNECTED)) {
+  bool isConnectedToWifi = (WiFi.status() == WL_CONNECTED);
+  if (isConnectedToWifi) {
     delay(2000);
     measureHumidityAndTemperature();
   } else {
