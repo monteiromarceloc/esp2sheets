@@ -48,7 +48,7 @@ void measureHumidityAndTemperature() {
   }
 
   float diff = difference(currentTemperature, t);
-  if(currentTemperature != t && diff > 0.1) {
+  if(currentTemperature != t && diff > 0.5) {
     currentTemperature = t;
     Serial.print(F("New currentTemperature: "));
     Serial.println(currentTemperature);
