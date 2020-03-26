@@ -15,8 +15,17 @@
 DHT dht(DHTPIN, DHTTYPE);
 RtcDS3231<TwoWire> Rtc(Wire);
 
-void setup() {
-  Serial.begin(9600);
+void configureDHT() {
+  dht.begin();
+}
+
+void configureRTC() { 
+  Rtc.Begin();
+  RtcDateTime compiled = RtcDateTime(__DATE__, __TIME__);
+  Rtc.SetDateTime(compiled);
+}
+
+void connectToWifi() {
   WiFi.begin(STASSID, STAPSK);
   Serial.print("Connecting...");
   while (WiFi.status() != WL_CONNECTED) {
@@ -26,10 +35,13 @@ void setup() {
   Serial.println("");
   Serial.print("Connected! IP address: ");
   Serial.println(WiFi.localIP());
-  Rtc.Begin();
-  RtcDateTime compiled = RtcDateTime(__DATE__, __TIME__);
-  Rtc.SetDateTime(compiled);
-  dht.begin();
+}
+
+void setup() {
+  Serial.begin(9600);
+  connectToWifi();
+  configureRTC();
+  configureDHT();
 }
 
 void loop() {
